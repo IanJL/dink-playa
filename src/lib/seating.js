@@ -2,7 +2,7 @@
 // `signups` must already be ordered by created_at ascending (= seat order).
 import { initials, fgFor, shortBring } from './helpers.js'
 
-export function deriveSeating(signups, session, colors) {
+export function deriveSeating(signups, session, colors, myUid) {
   const spots = session.spots_per_court
   const courtNums = session.court_nums || [1]
   const courts = courtNums.length
@@ -30,6 +30,7 @@ export function deriveSeating(signups, session, colors) {
         initials: filled ? initials(p.display_name) : '',
         brings: filled ? (p.bringing || []).map(shortBring) : [],
         hasBring: filled && (p.bringing || []).length > 0,
+        ownedByMe: filled && p.user_id === myUid,
         bg,
         fg: fgFor(bg),
       })
@@ -56,6 +57,7 @@ export function deriveSeating(signups, session, colors) {
       bg,
       fg: fgFor(bg),
       isNext: i === 0,
+      ownedByMe: p.user_id === myUid,
     }
   })
 

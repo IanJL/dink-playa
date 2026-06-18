@@ -31,7 +31,9 @@ export default function WeekCalendar({
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-        {sessions.map((s) => {
+        {[...sessions]
+          .sort((a, b) => sessionDate(a).getTime() - sessionDate(b).getTime())
+          .map((s) => {
           const dt = sessionDate(s)
           const times = sessionTimes(s)
           const signed = signedCountFor(s)

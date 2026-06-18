@@ -1,6 +1,6 @@
 const BRICOLAGE = "'Bricolage Grotesque',sans-serif"
 
-export default function Waitlist({ rows, count, hint, accent, onRemove }) {
+export default function Waitlist({ rows, count, hint, accent, hostView, onRemove }) {
   if (!rows.length) return null
   return (
     <div
@@ -75,12 +75,14 @@ export default function Waitlist({ rows, count, hint, accent, onRemove }) {
                 NEXT UP
               </span>
             )}
-            <button
-              onClick={() => onRemove(w.id)}
-              style={{ background: 'transparent', border: 'none', color: '#1a1a1a', opacity: 0.4, fontWeight: 800, fontSize: 16, cursor: 'pointer', flex: 'none' }}
-            >
-              ×
-            </button>
+            {(w.ownedByMe || hostView) && (
+              <button
+                onClick={() => onRemove(w.id)}
+                style={{ background: 'transparent', border: 'none', color: '#1a1a1a', opacity: 0.4, fontWeight: 800, fontSize: 16, cursor: 'pointer', flex: 'none' }}
+              >
+                ×
+              </button>
+            )}
           </div>
         ))}
       </div>

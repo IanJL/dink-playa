@@ -123,9 +123,13 @@ export function shortBring(b) {
 }
 
 // --- Courts ---
-export function nextFreeNum(nums) {
-  for (let i = 1; i <= 99; i++) {
-    if (nums.indexOf(i) === -1) return i
-  }
-  return nums.length + 1
+// Court labels are free text (e.g. "2", "2/3", "A"). When the host opens
+// another court we suggest a sensible next label: one more than the highest
+// number found among existing labels, else based on the count.
+export function nextCourtLabel(labels) {
+  const nums = (labels || [])
+    .map((l) => parseInt(l, 10))
+    .filter((n) => !isNaN(n))
+  const max = nums.length ? Math.max(...nums) : labels.length
+  return String(max + 1)
 }

@@ -33,8 +33,8 @@ export default function GameCard({
         </div>
         <div style={{ background: '#1a1a1a', color: '#efe6d4', borderRadius: 12, padding: '8px 11px', textAlign: 'center', flex: 'none' }}>
           <div style={{ fontFamily: BRICOLAGE, fontWeight: 800, fontSize: 22, lineHeight: 1 }}>{courts}</div>
-          <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', opacity: 0.75 }}>
-            {courts === 1 ? 'Court' : 'Courts'}
+          <div style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', opacity: 0.75, lineHeight: 1.15 }}>
+            {courts === 1 ? 'Court booked' : 'Courts booked'}
           </div>
         </div>
       </div>

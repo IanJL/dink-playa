@@ -1,6 +1,6 @@
 const BRICOLAGE = "'Bricolage Grotesque',sans-serif"
 
-export default function Courts({ courtBlocks, accent, onRemove }) {
+export default function Courts({ courtBlocks, accent, hostView, onRemove }) {
   return (
     <>
       {courtBlocks.map((court, ci) => (
@@ -77,29 +77,31 @@ export default function Courts({ courtBlocks, accent, onRemove }) {
                       ))}
                     </div>
                   )}
-                  <button
-                    onClick={() => onRemove(slot.id)}
-                    style={{
-                      position: 'absolute',
-                      top: -7,
-                      right: -7,
-                      width: 21,
-                      height: 21,
-                      borderRadius: 999,
-                      background: '#1a1a1a',
-                      color: '#fff',
-                      border: '2px solid #efe6d4',
-                      fontWeight: 800,
-                      fontSize: 11,
-                      cursor: 'pointer',
-                      lineHeight: 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    ×
-                  </button>
+                  {(slot.ownedByMe || hostView) && (
+                    <button
+                      onClick={() => onRemove(slot.id)}
+                      style={{
+                        position: 'absolute',
+                        top: -7,
+                        right: -7,
+                        width: 21,
+                        height: 21,
+                        borderRadius: 999,
+                        background: '#1a1a1a',
+                        color: '#fff',
+                        border: '2px solid #efe6d4',
+                        fontWeight: 800,
+                        fontSize: 11,
+                        cursor: 'pointer',
+                        lineHeight: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div

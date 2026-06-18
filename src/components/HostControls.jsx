@@ -117,14 +117,12 @@ export default function HostControls({
             {courtNums.map((n, idx) => (
               <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '2px solid #1a1a1a', borderRadius: 12, padding: '6px 6px 6px 11px' }}>
                 <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.5px', textTransform: 'uppercase', opacity: 0.5 }}>Court</span>
-                <span style={{ fontSize: 18, fontWeight: 800, opacity: 0.35 }}>#</span>
                 <input
-                  type="number"
-                  min="1"
-                  max="99"
+                  type="text"
                   value={n}
                   onChange={(e) => onCourtNumChange(idx, e.target.value)}
-                  style={{ width: 46, fontFamily: BRICOLAGE, fontSize: 18, fontWeight: 800, color: '#1a1a1a', background: '#ece3cf', border: 'none', borderRadius: 8, padding: '6px 4px', textAlign: 'center' }}
+                  placeholder="2/3"
+                  style={{ width: 64, fontFamily: BRICOLAGE, fontSize: 18, fontWeight: 800, color: '#1a1a1a', background: '#ece3cf', border: 'none', borderRadius: 8, padding: '6px 6px', textAlign: 'center' }}
                 />
               </div>
             ))}

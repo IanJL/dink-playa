@@ -9,7 +9,7 @@ import {
   toISO,
   fmtTime,
   daysUntil,
-  nextFreeNum,
+  nextCourtLabel,
 } from './lib/helpers.js'
 import { deriveSeating } from './lib/seating.js'
 
@@ -98,7 +98,7 @@ export default function App() {
   const selSession = sessions.find((s) => s.id === selectedId) || sessions[0]
   const selISO = toISO(sessionDate(selSession))
   const selSignups = signupsFor(selSession.id, selISO)
-  const seat = deriveSeating(selSignups, selSession, colors)
+  const seat = deriveSeating(selSignups, selSession, colors, uid)
   const { cap, courts, courtNums, confirmedCount, waitlist, courtBlocks, waitlistRows } = seat
   const maxCourts = selSession.max_courts
   const spots = selSession.spots_per_court
@@ -200,14 +200,14 @@ export default function App() {
   const addCourt = async () => {
     if (courts >= maxCourts) return
     const nums = courtNums.slice()
-    nums.push(nextFreeNum(nums))
+    nums.push(nextCourtLabel(nums))
     await updateSession({ court_nums: nums })
     flash('confirmed', `Court ${nums[nums.length - 1]} is open — waitlisters moved up! 🙌`)
   }
 
   const resetSession = async () => {
     await supabase.from('signups').delete().eq('session_id', selSession.id).eq('session_date', selISO)
-    await updateSession({ court_nums: [1] })
+    await updateSession({ court_nums: ['1'] })
     setStatus(null)
   }
 
@@ -215,14 +215,14 @@ export default function App() {
   const setCourts = (n) => {
     const target = Math.max(1, Math.min(maxCourts, n))
     const nums = courtNums.slice()
-    while (nums.length < target) nums.push(nextFreeNum(nums))
+    while (nums.length < target) nums.push(nextCourtLabel(nums))
     while (nums.length > target) nums.pop()
     updateSession({ court_nums: nums })
   }
   const setCourtNum = (idx, value) => {
-    const n = parseInt(value, 10)
+    // Court labels are free text now (e.g. "2", "2/3", "A").
     const nums = courtNums.slice()
-    if (!isNaN(n)) nums[idx] = Math.max(1, Math.min(99, n))
+    nums[idx] = value
     updateSession({ court_nums: nums })
   }
   // One-off edits for the NEXT occurrence. They auto-expire once the date passes.
@@ -343,7 +343,7 @@ export default function App() {
         {showAddCourt && (
           <AddCourtPrompt
             waitCount={waitlist.length}
-            nextCourt={courts + 1}
+            nextCourt={nextCourtLabel(courtNums)}
             promoteCount={promoteCount}
             bandColors={colors}
             accent={accent}
@@ -351,9 +351,9 @@ export default function App() {
           />
         )}
 
-        <Courts courtBlocks={courtBlocks} accent={accent} onRemove={removePlayer} />
+        <Courts courtBlocks={courtBlocks} accent={accent} hostView={hostView} onRemove={removePlayer} />
 
-        <Waitlist rows={waitlistRows} count={waitlist.length} hint={waitlistHint} accent={accent} onRemove={removePlayer} />
+        <Waitlist rows={waitlistRows} count={waitlist.length} hint={waitlistHint} accent={accent} hostView={hostView} onRemove={removePlayer} />
 
         <SignupBar value={nameInput} onChange={setNameInput} onAdd={startAdd} accent={accent} />
 

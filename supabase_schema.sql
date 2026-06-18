@@ -16,7 +16,7 @@ create table if not exists sessions (
   day_of_week         int  not null,                -- 0=Sun, 2=Tue, 5=Fri
   start_time          time not null,                -- regular recurring start
   end_time            time not null,                -- regular recurring end
-  court_nums          int[] not null default '{1}', -- e.g. {1,2,3}
+  court_nums          text[] not null default '{1}',-- court LABELS, e.g. {2,"2/3","A"}
   spots_per_court     int  not null default 6,
   max_courts          int  not null default 3,
   override_date       date,                          -- one-off date for next occurrence
@@ -29,6 +29,8 @@ alter table sessions add column if not exists override_date date;
 alter table sessions add column if not exists override_start_time time;
 alter table sessions add column if not exists override_end_time time;
 alter table sessions drop column if exists date_override;
+-- Court labels are free text (allows "2/3", "A", etc.)
+alter table sessions alter column court_nums type text[] using court_nums::text[];
 
 -- One row per person, per game occurrence. created_at order = seat order.
 create table if not exists signups (
