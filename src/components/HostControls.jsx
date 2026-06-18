@@ -42,13 +42,14 @@ export default function HostControls({
     setLabels(courtNums)
   }, [courtNums.join('')])
 
+  // Update only local state while typing; commit to the database on blur/Enter
+  // so the live-sync refetch can't interrupt multi-character entries like "2/3".
   const editLabel = (idx, value) => {
     setLabels((prev) => {
       const next = prev.slice()
       next[idx] = value
       return next
     })
-    onCourtNumChange(idx, value)
   }
 
   const decDisabled = courts <= 1
@@ -139,6 +140,10 @@ export default function HostControls({
                   type="text"
                   value={n}
                   onChange={(e) => editLabel(idx, e.target.value)}
+                  onBlur={(e) => onCourtNumChange(idx, e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.currentTarget.blur()
+                  }}
                   placeholder="2/3"
                   style={{ width: 64, fontFamily: BRICOLAGE, fontSize: 18, fontWeight: 800, color: '#1a1a1a', background: '#ece3cf', border: 'none', borderRadius: 8, padding: '6px 6px', textAlign: 'center' }}
                 />
