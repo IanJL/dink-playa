@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+
 const BRICOLAGE = "'Bricolage Grotesque',sans-serif"
 const HANKEN = "'Hanken Grotesk'"
 
@@ -33,6 +35,22 @@ export default function HostControls({
   onReset,
   accent,
 }) {
+  // Local copy of court labels so typing (e.g. "2/3") stays smooth and isn't
+  // interrupted by the database round-trip on each keystroke.
+  const [labels, setLabels] = useState(courtNums)
+  useEffect(() => {
+    setLabels(courtNums)
+  }, [courtNums.join('')])
+
+  const editLabel = (idx, value) => {
+    setLabels((prev) => {
+      const next = prev.slice()
+      next[idx] = value
+      return next
+    })
+    onCourtNumChange(idx, value)
+  }
+
   const decDisabled = courts <= 1
   const incDisabled = courts >= maxCourts
   const stepBtn = (disabled, size) => ({
@@ -114,13 +132,13 @@ export default function HostControls({
             <div style={{ fontSize: 11.5, fontWeight: 700, opacity: 0.45 }}>the park's physical courts</div>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-            {courtNums.map((n, idx) => (
+            {labels.map((n, idx) => (
               <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fff', border: '2px solid #1a1a1a', borderRadius: 12, padding: '6px 6px 6px 11px' }}>
                 <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.5px', textTransform: 'uppercase', opacity: 0.5 }}>Court</span>
                 <input
                   type="text"
                   value={n}
-                  onChange={(e) => onCourtNumChange(idx, e.target.value)}
+                  onChange={(e) => editLabel(idx, e.target.value)}
                   placeholder="2/3"
                   style={{ width: 64, fontFamily: BRICOLAGE, fontSize: 18, fontWeight: 800, color: '#1a1a1a', background: '#ece3cf', border: 'none', borderRadius: 8, padding: '6px 6px', textAlign: 'center' }}
                 />
